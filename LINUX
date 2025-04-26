@@ -1,0 +1,281 @@
+11. TCL (Transaction Control Language) Questions
+
+Q55: Begin a transaction that updates the sal of employees in dept_id = 101
+by 2000. Commit the transaction after the update.
+
+SQL> BEGIN;
+SQL> UPDATE empm35 SET sal = sal + 2000 WHERE dept_id = 101;
+SQL> COMMIT;
+
+Commit succeeded.
+
+Q56: Start a transaction where the employee salary of emp_id = 3 is updated to 55000.
+Undo the update using Roll back the transaction.
+
+SQL> BEGIN;
+SQL> UPDATE empm35 SET sal = 55000 WHERE emp_id = 3;
+SQL> ROLLBACK;
+
+Rollback succeeded.
+ 
+CYCLE II - PLSQL 
+
+EXPERIMENT 1:
+
+AIM: Write a PL/SQL code to calculate total and percentage of marks of a student in four subjects. Concept: Input from keyboard
+
+CODE:
+
+Declare
+  name varchar2(20);
+  rollno number;
+  mark1 number;
+  mark2 number;
+  mark3 number;
+  mark4 number;
+  total number;
+  percentage number(8,2);
+Begin
+  name:='&name';
+  rollno:=&rollno;
+  mark1:=&mark1;
+  mark2:=&mark2;
+  mark3:=&mark3;
+  mark4:=&mark4;
+  total:=mark1+mark2+mark3+mark4;
+  percentage:=total/4;
+  dbms_output.put_line('Student details');
+  dbms_output.put_line('Name:'||name);
+  dbms_output.put_line('Roll no:'||rollno);
+  dbms_output.put_line('Total mark='||total);
+  dbms_output.put_line('Percentage='||percentage);
+End;
+/
+
+
+OUTPUT:
+
+SQL> @pgm1.sql
+--------------------------------------------
+
+Student details
+Name:anu
+Roll no:12
+Total mark=367
+Percentage=91.75
+
+
+PL/SQL procedure successfully completed.
+
+
+
+
+
+
+
+EXPERIMENT 2:
+
+AIM: Write a PL/SQL code to display the employee name and his department id who gets the maximum salary.Concept: Setting data variable type & size as that of table attributes.
+
+CODE:
+
+DECLARE
+    max_sal number(8,2);
+    v_empcount number(4);
+    v_empname empm35.emp_name%type;
+    v_empdept empm.dept_id%type;
+
+BEGIN
+    SELECT max(sal) INTO max_sal FROM empm35;
+    dbms_output.put_line('The highest salary is ' || max_sal);
+    
+    SELECT count(emp_id) INTO v_empcount FROM empm35 WHERE sal = max_sal;
+    IF v_empcount > 1 then
+        dbms_output.put_line('There are '||v_empcount||' employees with this sal');
+    ELSE
+        SELECT emp_name,dept_id INTO v_empname,v_empdept FROM empm35 WHERE sal=max_sal;
+        dbms_output.put_line('The person having highest salary is '||v_empname);
+        dbms_output.put_line('Department=' ||v_empdept);
+    END IF;
+END;
+/  
+
+
+OUTPUT:
+
+SQL> @pgm2.sql
+--------------------------------------------
+The highest salary is 85000
+The person having highest salary is Lakshmi
+Department = 102
+
+PL/SQL procedure successfully completed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+EXPERIMENT 3:
+
+AIM: Write a PL/SQL code to display the job details of the person with employee number 102. (Use the concept of "%rowtype")
+
+CODE:
+
+Declare
+v_emp employee_85%rowtype;
+Begin
+select * into v_emp from empm35 where emp_id=2;
+dbms_output.put_line('----------------------');
+dbms_output.put_line('Faculty Name:'||v_emp.emp_name);
+dbms_output.put_line('Joining Date:'||v_emp.emp_join);
+dbms_output.put_line('Salary:'
+||v_emp.sal);
+End;
+/
+
+
+
+OUTPUT:
+
+SQL> @pgm3.sql
+--------------------------------------------
+
+Faculty Name:Sana
+Joining Date:16-JUN-22
+Salary:70000
+
+PL/SQL procedure successfully completed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+EXPERIMENT 4:
+
+AIM: Write a PL/SQL code to calculate the total salary amount of first n records of employee table. Concept: cursor.
+
+CODE:
+
+Declare
+n number;
+i number:=1;
+tot number:=0;
+cursor emp is select emp_salary from empm35;
+cemp emp%rowtype;
+begin
+  n:=&n;
+  open emp;
+  while(i<=n)
+  loop
+  		fetch emp into cemp;
+  		tot:=tot+cemp.sal;
+  		i:=i+1;
+  end loop;
+  dbms_output.put_line('Total salary of'||' '||n||' '||'employees'||' '||'is'||' '||tot);
+  close emp;
+End;
+/  
+  		
+
+
+OUTPUT:
+
+SQL> @pgm4.sql
+--------------------------------------------
+
+Enter value for n: 3
+old   6:   n:=&n;
+new   6:   n:=3;
+Total salary of 3 employees is 180500
+
+PL/SQL procedure successfully completed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+EXPERIMENT 5:
+
+AIM: Write a PL/SQL code to raise an exception if an employee with a particular employee ID is not existing. Otherwise print that employee details
+
+CODE:
+
+accept v_id prompt 'Enter the Employee ID to search:';
+Declare
+v_emp empm35%rowtype;
+v_id number;
+Begin
+v_id:=&v_id;
+select * into v_emp from empm35 where emp_id=v_id;
+dbms_output.put_line('___________________');
+dbms_output.put_line('Name:'||v_emp.emp_name);
+dbms_output.put_line('Joining Date:'||v_emp.emp_join);
+dbms_output.put_line('Salary:'
+||v_emp.emp_salary);
+dbms_output.put_line('___________________');
+exception
+	when no_data_found then
+	dbms_output.put_line('There is no employee with ID: '||v_id);	
+End;
+/
+
+
+OUTPUT:
+
+
+SQL> @pgm3.sql
+--------------------------------------------
+
+Enter the Employee ID to search: 2
+old   6: v_id:=&v_id;
+new   6: v_id:=2;
+___________________
+Name:Sana
+Joining Date:16-JUN-22
+Salary:70000
+___________________
+ 
+Enter the Employee ID to search: 99
+old   6: v_id:=&v_id;
+new   6: v_id:=99;
+There is no employee with ID: 99
+
+PL/SQL procedure successfully completed.
+
+
+
