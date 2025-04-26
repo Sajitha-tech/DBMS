@@ -1,0 +1,865 @@
+CYCLE I
+
+1. DDL (Data Definition Language)
+
+Q1: Create a department table with the following columns: dept_id (PK), dept_name
+(not null), dept_location.
+
+SQL> CREATE TABLE dept35 ( dept_id INT  PRIMARY KEY,dept_name VARCHAR(20) NOT NULL,dept_loc VARCHAR(25));
+
+Table created.
+
+Q2: Write a SQL query to create an employee table with the following columns: emp_id
+(PK), emp_name, emp_salary (>20k), emp_join_date (between June 1998- till
+date), dept_id (FK).
+
+SQL> CREATE TABLE empm35 ( emp_id INT PRIMARY KEY,emp_name VARCHAR(20) NOT NULL,sal DECIMAL(12,2) CHECK(sal > 20000),  emp_join DATE CHECK(emp_join >= DATE '1998-06-01'), dept_id INT,  FOREIGN KEY (dept_id) REFERENCES dept95(dept_id));
+
+Table created.
+
+Q3: Create table support table with s_id (PK), emp_id (FK), dept_id (FK), status
+(Yes/No).
+
+SQL> CREATE TABLE support35 ( s_id NUMBER PRIMARY KEY,  emp_id INT, dept_id INT, status VARCHAR(3) CHECK(status IN ('yes','no')), FOREIGN KEY (emp_id) REFERENCES empm35(emp_id), FOREIGN KEY (dept_id) REFERENCES dept35(dept_id));
+
+Table created.
+
+
+Q4: Display the schema of the above three tables.
+
+DESC dept35;
+
+Name			Null? 		Type
+-------------------- --------------------- ------------------
+DEPT_ID		NOT NULL	NUMBER(38)
+DEPT_NAME 	NOT NULL 	VARCHAR2(20)
+DEPT_LOC				VARCHAR2(25)
+
+DESC empm35;
+
+Name      	   Null?                Type
+---------------- ---------------- --------------
+EMP_ID  	   NOT NUL	NUMBER(38)
+EMP_NAME     NOT NULL	VARCHAR2(20)
+SAL                  	            NUMBER(12,2)
+EMP_JOIN       DATE
+DEPT_ID                            	 NUMBER(38)
+EMP_EMAIL                          VARCHAR2(35)
+
+
+DESC support35;
+
+Name        Null?    Type
+----------- --------- -------------------------
+S_ID        NOT     NULL NUMBER
+EMP_ID               NUMBER(38)
+DEPT_ID             NUMBER(38)
+STATUS               VARCHAR2(3)
+
+Q5:Alter the employee table to add a new column emp_email of type VARCHAR(100).
+
+SQL> ALTER TABLE empm35 ADD emp_email VARCHAR(100);
+
+Table altered.
+
+DESC empm35;
+
+Name      	   Null?                Type
+---------------- ---------------- --------------
+EMP_ID  	   NOT NUL	NUMBER(38)
+EMP_NAME     NOT NULL	VARCHAR2(20)
+SAL                  	            NUMBER(12,2)
+EMP_JOIN       DATE
+DEPT_ID                            	 NUMBER(38)
+EMP_EMAIL                          VARCHAR2(100)
+
+
+Q6: Drop the support table if it is no longer required.
+
+SQL> DROP TABLE support35;
+
+Table dropped.
+
+Q7: Modify the emp_salary column in the employee table to allow values up to
+DECIMAL(12, 2).
+
+
+SQL> ALTER TABLE empm35 MODIFY sal DECIMAL(12,2);
+
+Table altered.
+
+DESC empm35;
+
+Name      	   Null?                Type
+---------------- ---------------- --------------
+EMP_ID  	   NOT NUL	NUMBER(38)
+EMP_NAME     NOT NULL	VARCHAR2(20)
+SAL                  	            NUMBER(12,2)
+EMP_JOIN        DATE
+DEPT_ID                            	 NUMBER(38)
+EMP_EMAIL                          VARCHAR2(35)
+
+
+
+2. DML (Data Manipulation Language)
+
+
+Q8: Add five suitable records to department table (Let value of dept_id starts with 101).
+
+
+
+SQL> INSERT INTO dept35 VALUES (101, 'HR', 'NewYork');
+
+1 row created.
+
+SQL> INSERT INTO dept35  VALUES (102, 'Finance', 'London');
+
+1 row created.
+
+SQL> INSERT INTO dept35 VALUES (103, 'Accountant', 'US');
+
+1 row created.
+
+SQL> INSERT INTO dept35  VALUES (104, 'Finance', 'NewYork');
+
+1 row created.
+
+SQL> INSERT INTO dept35 VALUES (105, 'Tester', 'UAE');
+
+1 row created.
+
+
+
+
+SQL> select * from dept35;
+
+DEPT_ID	DEPT_NAME	DEPT_LOC
+-------------	------------------	----------------
+101	HR	NewYork
+102	Finance	London
+103	Accountant	US
+104	Finance	NewYork
+105	Tester	UAE
+  
+
+
+Q9: Insert the following employee record into the employee table: emp_id = 1, emp_name
+= 'John Doe', emp_salary = 60000, emp_join_date = '15-05-2021', dept_id
+= 101.
+
+
+SQL> insert into empm35(emp_id,emp_name,sal, emp_join,dept_id)VALUES (1,'John Doe',60000,TO_DATE('2021-05-15','YYYY-MM-DD'),101);
+
+1 row created.
+
+Q10: Insert multiple records of employees into the employee table with emp_id, emp_name,
+emp_salary, and dept_id.
+
+SQL> INSERT INTO empm35(emp_id,emp_name,sal,emp_join,dept_id)VALUES(1,'Rohith',60000,TO_DATE('2021-05-16','YYYY-MM-DD'),101);
+
+1 row created.
+
+SQL> INSERT INTO empm35(emp_id,emp_name,sal,emp_join,dept_id) VALUES (2,'Sana',70000, TO_DATE('2022-06-16','YYYY-MM-DD'),102);
+
+1 row created.
+
+SQL> INSERT INTO empm35(emp_id,emp_name,sal,emp_join,dept_id) VALUES (3,'Ram',60500, TO_DATE('2020-07-10','YYYY-MM-DD'),103);
+
+1 row created.
+
+SQL> INSERT INTO empm35(emp_id,emp_name,sal,emp_join,dept_id) VALUES (3,'Ram',60500, TO_DATE('2020-07-10','YYYY-MM-DD'),103);
+1 row created.
+
+
+    
+SQL> select * from empm35;
+
+EMP_ID	EMP_NAME    	    SAL	EMP_JOIN	DEPT_ID	EMP_EMAIL
+------------  	---------------- 	------------	--------------	-------------	-----------------
+1	John Doe	66000.00	15-MAY-21	101	
+2	Sana	70000.00	16-JUN-22	102
+3	Ram	60500.00	10-JUL-20	103
+4	Meera	50000.00	01-SEP-19	102
+5	Ravi	55500.00	10-MAR-20	103
+6	Lakshmi	85000.00	12-JAN-21	102
+7	Sita	77000.00	18-FEB-23	102
+8	Riza	85000.00	25-NOV-22	102
+
+
+
+Q11: Update the salary of the employee with emp_id = 1 by increasing it by 10%.
+
+SQL > update empm35 set sal=sal*1.10 where emp_id=1; 
+
+1 row updated.
+
+
+
+SQL>  select * from empm35;
+
+
+
+
+EMP_ID	EMP_NAME	    SAL	EMP_JOIN	DEPT_ID
+-----------	-----------------	-----------	---------------	------------
+1	John Doe	66000.00	15-MAY-21	101
+2	Sana	70000.00	16-JUN-22	102
+3	Ram	60500.00	10-JUL-20	103
+4	Meera	50000.00	01-SEP-19	102
+5	Ravi	55500.00	10-MAR-20	103
+6	Lakshmi	85000.00	12-JAN-21	102
+7	Sita	77000.00	18-FEB-23	102
+8	Riza	85000.00	25-NOV-22	102
+
+
+
+
+Q12: Delete the record of the employee with emp_id = 1.
+
+SQL> delete from empm35 where emp_id=1;
+
+1 row deleted.
+
+SQL> select * from empm35;
+
+EMP_ID	EMP_NAME	     SAL	EMP_JOIN	DEPT_ID
+-----------	-----------------	-----------	--------------	--------------
+2	Sana	70000.00	16-JUN-22	102
+3	Ram	60500.00	10-JUL-20	103
+4	Meera	50000.00	01-SEP-19	102
+5	Ravi	55500.00	10-MAR-20	103
+6	Lakshmi	85000.00	12-JAN-21	102
+7	Sita	77000.00	18-FEB-23	102
+8	Riza	85000.00	25-NOV-22	102
+
+
+Q13: Update the emp_salary of employees in dept_id = 101 to 10% more if their current
+salary is less than 50000.
+
+
+SQL> insert into empm35 values(6,'Keerthi',36000,TO_DATE('2021-04-15','YYYY-MM-DD'),101);
+
+1 row created.
+
+SQL> update empm35 set emp_salary=emp_salary*1.10 where dept_id=101 and emp_salary<50000;
+
+1 row updated.
+
+SQL> select * from empm35;
+
+
+
+EMP_ID	EMP_NAME	     SAL	EMP_JOIN	DEPT_ID	
+-----------	----------------	------------	---------------	--------------	
+6	Keerthi	39600.00	15-APR-21	101	
+
+3. SELECT with Filters (WHERE, HAVING, GROUP BY, ORDER BY)
+
+
+Q14: Write a SELECT query to list all employees with their emp_id, emp_name, and
+emp_salary.
+
+
+SQL> select emp_id,emp_name,emp_sal from empm35;
+
+EMP_ID	EMP_NAME	     SAL
+-----------	-----------------	-------------------
+2	Sana	70000.00
+3	Ram	60500.00
+4	Meera	50000.00
+5	Ravi	55500.00
+6	Lakshmi	85000.00
+7	Sita	77000.00
+8	Riza	85000.00
+6	Keerthi	39600.00
+
+ emp_name,emp_salary,emp_join_date from employee_85 where e
+
+
+ Q15: Retrieve the emp_name, emp_salary, and emp_join_date for employees whose
+salary is greater than 50000.
+
+
+SQL> select emp_name,emp_sal,emp_join from empm35 where emp_salary>50000;
+
+EMP_NAME	     SAL	EMP_JOIN
+----------------	-------------------	---------------
+Sana	70000.00	16-JUN-22
+Lakshmi	85000.00	12-JAN-21
+Sita	77000.00	18-FEB-23
+Riza	85000.00	25-NOV-22
+
+Q16: List employees in the employee table ordered by emp_salary in descending order.
+
+SQL>  select * from empm35 order by  sal;
+
+
+
+
+
+
+
+EMP_ID	EMP_NAME	   SAL	EMP_JOIN	DEPT_ID
+----------	-----------------	------------	--------------	---------------
+6	Keerthi	39600.00	15-APR-21	101
+4	Meera	50000.00	01-SEP-19	102
+3	Ram	60500.00	10-JUL-20	103
+5	Ravi	55500.00	10-MAR-20	103
+2	Sana	70000.00	16-JUN-22	102
+7	Sita	77000.00	18-FEB-23	102
+6	Lakshmi	85000.00	12-JAN-21	102
+8	Riza	85000.00	25-NOV-22	102
+
+
+
+
+Q17: Retrieve all employees' names and salaries who joined after 01-01-2020.
+
+SQL> select emp_name,sal from empm35 where emp_join_ > TO_DATE('2020-01-01','YYYY-MM-DD');
+
+EMP_NAME	EMP_SALARY
+----------------	-------------------
+Sana	70000.00
+Lakshmi	85000.00
+Sita	77000.00
+Riza	85000.00
+
+Q18: Write a query to select all employees whose name starts with "J".
+
+SQL> select * from empm35 where emp_name like 'J%';
+
+EMP_ID	 EMP_NAME  	   SAL	EMP_JOIN	DEPT_ID
+-----------	----------------	-----------	---------------	-------------
+9	John	55000.00	01-MAR-22	101
+
+
+
+Q19: Select the emp_name and emp_salary for employees whose salary is between 40000
+and 60000.
+
+SQL> select emp_name,sal from empm35 where sal between 40000 and 60000;
+
+EMP_NAME	EMP_SALARY
+-----------------	------------------
+Ravi	55500.00
+Meera	50000.00
+
+
+
+Q20: Write a query that groups employees by dept_id and shows the total salary per
+department.
+
+SQL> select dept_id,sum(sal) as totalsalary from empm35 group by dept_id;
+
+DEPT_ID	TOTAL_SALARY
+------------	-----------------------
+101	160500.00
+102	205000.00
+
+
+
+Q21: Retrieve the department-wise average salary, but only for those departments with an
+average salary above 60000.
+
+SQL> select dept_id,avg(sal) as average_salary from empm35 group by dept_id;
+
+DEPT_ID	AVERAGE_SALARY
+-------------	----------------------------
+101	54000.00
+102	61000.00
+
+
+
+Q22: List the departments and the number of employees in each department who earn
+above 50000.
+
+SQL> select dept_id,count(*) as employee_count from empm35 where sal > 50000 group by dept_id;
+
+DEPT_ID	EMPLOYEE_COUNT
+------------	----------------------------
+101	2
+102	3
+
+
+Q23: Use HAVING to list departments that have more than 3 employees.
+
+SQL> select dept_id,count(*) as employee_count from empm35 group by dept_id having count(*)>3;
+
+DEPT_ID	EMPLOYEE_COUNT
+------------	---------------------------
+102	5
+103	4
+
+ 4. Subquery Questions
+
+
+Q24: Write a query to find the names of employees who have a salary greater than the
+average salary in their department.
+
+
+SQL> SELECT emp_name FROM empm35 e WHERE sal > (SELECT AVG(sal)FROM empm5 WHERE dept_id = e.dept_id GROUP BY dept_id);
+
+EMP_NAME
+-------------------
+Ram
+Keerthi
+Sita
+Riza
+
+
+
+
+Q25: Select the emp_name and emp_salary of employees who are in departments that are
+located in 'Ernakulam'.
+
+
+SQL> select emp_name,sal from empm35 where dept_id in(select dept_id from dept35 where dept_loc='ernakulam');
+
+EMP_NAME	EMP_SALARY
+-----------------	--------------------
+Lakshmi	85000.00
+Riza	85000.00
+Sita	77000.00
+
+
+Q26: Find the emp_name of employees who earn more than the highest salary in department
+102.
+
+SQL> SELECT emp_name FROM empm35 WHERE sal > (SELECT MAX(sal) FROM empm35 WHERE dept_id = 102);
+
+EMP_NAME
+------------------
+Riza
+Sita
+Lakshmi
+
+Q27: Write a query that returns the department name of the department with the highest
+total salary.
+
+
+SQL> SELECT dept_name FROM dept35 WHERE dept_id=(SELECT dept_id FROM empm35 GROUP BY dept_id ORDER BY SUM(sal) DESC FETCH FIRST 1 ROW ONLY);
+
+
+
+
+
+
+DEPT_NAME
+-------------------
+Finance
+
+
+Q28: Find the emp_id and emp_name of employees who are working in departments with
+less than 2 employees.
+
+SQL> SELECT emp_id,emp_name FROM emp5 WHERE dept_id IN (SELECT dept_id FROM empm35 GROUP BY dept_id HAVING COUNT(*) < 2);
+
+
+EMP_ID	EMP_NAME
+-----------	----------------
+4	Keerthi
+66666kuu
+
+5. View Questions
+ukf
+Q29: Create a view high_salary_employees that lists the emp_name and emp_salary of
+employees who earn above 70000.
+
+SQL> create view highsalaryemployees as select emp_name,sal from empm35 where sal > 70000;
+
+View created. 
+
+Q30: Write a query to view the data from the high_salary_employees view.
+
+
+SQL> select * from highsalaryemployees;
+
+EMP_NAME        SAL
+------------------ ----------
+Lakshmi            85000.00
+Riza                   85000.00
+Sita                    77000.00
+Asna                  80000.00
+
+Q31: Create a view to list employees along with the department name and their salary,
+filtering out employees earning below 50000.
+
+SQL> create view employees as select e.emp_name,d.dept_name,e.emp_salary from empm35 e,dept35 d where sal < 50000 and e.dept_id=d.dept_id;
+
+View created.
+
+SQL> select * from employees;
+
+
+
+
+EMP_NAME	DEPT_NAME	    SAL
+----------------	------------------	--------------------
+Ravi	Accountant	45000.00
+Meera	Finance	48000.00
+Keerthi	HR	36000.00
+Sita	Finance	48000.00
+
+
+
+
+Q32: Drop the high_salary_employees view.
+
+
+SQL> drop view highsalaryemployees;
+
+View dropped.
+
+6. Aggregate Function Questions
+
+Q33: Write a query to find the total salary paid in each department.
+
+SQL> select dept_id,sum(sal) as Total_sal from empm35 group by dept_id;
+
+
+DEPT_ID	TOTAL_SAL
+------------	-----------------
+101	180000.00
+102	200000.00
+103	150000.00
+
+
+
+
+
+
+
+
+Q34: Use AVG() to find the average salary of employees in the 'Marketing' department.
+
+SQL> select avg(sal) from empm35 where dept_id =(select dept_id from dept35 where dept_name ='Marketing');
+
+
+AVG(EMP_SALARY)
+---------------------------------------------------------------------------------
+55000.00
+
+
+
+
+
+
+Q35: Find the employee with the highest salary in each department using MAX().
+
+SQL> SELECT dept_id, emp_name, sal AS highest_salary  FROM empm35 e WHERE  sal = (SELECT MAX(sal) FROM empm35 WHERE 
+dept_id = e.dept_id);
+
+DEPT_ID	EMP_NAME	HIGHEST_SALARY
+-------------	-----------------	-----------------------------
+101	Rohith	60000.00
+102	Lakshmi	85000.00
+103	Sita	77000.00
+
+Q36: Write a query that finds the total number of employees in each department.
+
+SQL>  select dept_id,count(*) as Total_employees from empm35 group by dept_id;
+
+DEPT_ID	TOTAL_EMPLOYEES
+-------------	--------------------------------
+101	1
+102	5
+103	4
+
+
+
+
+
+Q37: Calculate the sum of the salaries of all employees whose emp_salary is greater than
+50000.
+
+
+SQL> select sum(sal) as Total_salary from empm35 where sal > 50000;
+TOTAL_SALARY
+
+TOTAL
+TOTAL_SALARY
+-----------------------
+325000.00
+_SALARY
+25000.00
+7. Join Questions
+
+Q38: Write an INNER JOIN query to list employee names and their corresponding
+department names.
+
+SQL>  select e.emp_name,d.dept_name from empm35 e inner join dept35 d on e.dept_id=d.dept_id;
+
+
+
+
+EMP_NAME   DEPT_NAME
+---------------- -----------------------
+John Doe        HR
+Sana               Finance
+Ram               Accountant
+Meera            Finance
+Ravi              Accountant
+Lakshmi        Finance
+Sita                Finance
+Riza               Finance
+
+Q39: Use a LEFT JOIN to list all employees and their department names, including those
+who do not belong to any department.
+
+SQL> select e.emp_name,d.dept_name from empm35 e left join dept35 d on e.dept_id=d.dept_id;
+
+EMP_NAME	DEPT_NAME
+----------------	--------------------
+Sana	Finance
+Ram	Accountant
+Meera	Finance
+Ravi	Accountant
+Lakshmi	Finance
+Sita	Finance
+Riza	Finance
+Keerthi	HR
+
+
+Q40: Write a RIGHT JOIN to list all departments and their corresponding employees,
+including departments with no employees.
+
+
+SQL> select e.emp_name,d.dept_name from empm35 e right join dept35 d on e.dept_id=d.dept_id;
+
+EMP_NAME	DEPT_NAME
+----------------	----------------------
+Sana	Finance
+Meera	Finance
+Lakshmi	Finance
+Sita	Finance
+Riza	Finance
+Ram	Accountant
+Ravi	Accountant
+Keerthi	HR
+	
+
+Q41: Use an OUTER JOIN to list all employees and their department names, showing NULL
+if there is no corresponding department.
+
+SQL> select e.emp_name,d.dept_name from empm35 e full outer join dept35 d on e.dept_id=d.dept_id;
+
+
+EMP_NAME	DEPT_NAME
+-----------------	---------------------
+Sana	Finance
+Ram	Accountant
+Meera	Finance
+Ravi	Accountant
+Lakshmi	Finance
+Sita	Finance
+Riza	Finance
+Keerthi	HR
+NULL	Tester
+8. Arithmetic and String Operation Questions
+
+Q42: Write a query to increase the salary of all employees by 5000.
+
+SQL> SELECT emp_name,sal,sal+5000 AS increased_salary FROM empm35;
+
+EMP_NAME	EMP_SALARY	INCREASED_SALARY
+-----------------	-------------------	----------------------------------
+Sana	70000.00	75000.00
+Ram	60500.00	65500.00
+Meera	50000.00	55000.00
+Ravi	55500.00	60500.00
+Lakshmi	85000.00	90000.00
+Sita	77000.00	82000.00
+Riza	85000.00	90000.00
+Keerthi	39600.00	44600.00
+
+
+Q43: Use arithmetic operations to find the new salary for employees after a 10% bonus.
+
+SQL> SELECT emp_name,sal,sal*1.10 AS new_salary FROM empm35;
+
+
+EMP_NAME	EMP_SALARY	NEW_SALARY
+-----------------	-------------------	---------------------
+Sana	70000.00	77000.00
+Ram	60500.00	66550.00
+Meera	50000.00	55000.00
+Ravi	55500.00	61050.00
+Lakshmi	85000.00	93500.00
+Sita	77000.00	84700.00
+Riza	85000.00	93500.00
+Keerthi	39600.00	43560.00
+
+		
+
+Q44: Use the CONCAT() function to display department names followed by its location.
+
+
+
+
+SQL> SELECT CONCAT(CONCAT(dept_name, '  -  '), dept_loc) AS department_info 
+FROM dept35;
+
+DEPARTMENT_INFO
+-----------------------------
+HR - NewYork
+Finance - London
+Accountant - US
+Finance - NewYork
+Tester - UAE
+
+Q45: Write a query to extract the first 3 letters of the employee name.
+
+SQL> SELECT emp_name ,SUBSTR(emp_name, 1, 3) AS substring_name FROM empm35;
+
+EMP_NAME	SUBSTRING_NAME
+------------------	----------------------------
+Sana	San
+Ram	Ram
+Meera	Mee
+Ravi	Rav
+Lakshmi	Lak
+Sita	Sit
+Riza	Riz
+Keerthi	Kee
+
+
+Q46: Use LENGTH() to find the number of characters in the employee's name.
+
+SQL> SELECT emp_name, LENGTH(emp_name) AS name_length FROM empm35;
+
+
+
+
+
+
+EMP_NAME	NAME_LENGTH
+----------------	--------------------------
+Sana	4
+Ram	3
+Meera	5
+Ravi	4
+Lakshmi	7
+Sita	4
+Riza	4
+Keerthi	7
+
+
+Q47: Use UPPER() to convert the employee's name to uppercase.
+
+SQL> SELECT emp_name,UPPER(emp_name) AS uppercase_name FROM empm35;
+
+EMP_NAME	UPPERCASE_NAME
+------------------------------	--------------------------------
+Sana	SANA
+Ram	RAM
+Meera	MEERA
+Ravi	RAVI
+Lakshmi	LAKSHMI
+Sita	SITA
+Riza	RIZA
+Keerthi	KEERTHI
+
+
+9. Set Operations Questions
+
+Q48: Use UNION to combine the lists of employees who joined before 2010 and after
+2018.
+
+
+SQL> select emp_name,emp_join_date from empm35 where emp_join < TO_DATE('2010-01-01','YYYY-MM-DD') union select emp_name,emp_join from empm35 where emp_join>  TO_DATE('2018-12-31','YYYY-MM-DD'); 
+
+EMP_NAME	                                      EMP_JOIN
+----------------	-----------------------------------------------
+Sana	                                       16-JUN-22
+Ram	                                       10-JUL-20
+Meera	                                       01-SEP-19
+Ravi	                                      10-MAR-20
+Lakshmi	                                      12-JAN-21
+Sita	                                      18-FEB-23
+Riza	                                      25-NOV-22
+Keerthi	                                     15-APR-21
+
+
+9. Set Operations Questions
+
+Q48: Use UNION to combine the lists of employees who joined before 2010 and after
+2018.
+
+
+SQL> select emp_name,emp_join_date from empm35 where emp_join< TO_DATE('2010-01-01','YYYY-MM-DD') union select emp_name,emp_join from empm5 where emp_join >  TO_DATE('2018-12-31','YYYY-MM-DD');
+
+
+
+
+
+
+EMP_NAME	EMP_JOIN_DATE
+-------------------------------------	------------------------
+John	12-MAY-08
+Sana	16-JUN-22
+Ram	10-JUL-20
+Meera	01-SEP-19
+Ravi	10-MAR-20
+Lakshmi	12-JAN-21
+Sita	18-FEB-23
+Riza	25-NOV-22
+Keerthi	15-APR-21
+
+
+
+Q49: Use INTERSECT to find employees who get salary in the range 40k-50k.
+
+SQL> select emp_name from empm35 where sal>=40000 intersect select emp_name from empm35 where sal<=50000;
+
+
+EMP_NAME
+-----------------
+Meera
+Keerthi
+John
+
+
+
+
+Q50: Use EXCEPT to list out the departments not in Ernakulam.
+
+SQL> select dept_name,dept_id from dept35 minus select dept_name,dept_id from dept35 where dept_loc='ernakulum';
+
+DEPT_NAME	DEPT_ID
+---------------------------------	-------------
+HR	101
+Finance	102
+Accountant	103
+Finance	104
+Tester	105
+
+
+
+10. DCL (Data Control Language) Questions
+
+Q51: Grant the SELECT permission to the user user1 for the employee table.
+
+SQL> GRANT SELECT ON empm35 TO user1;
+
+Grant succeeded.
+
+
+Q52: Revoke the SELECT permission from the user user1 on the employee table.
+
+SQL> REVOKE SELECT ON empm35 FROM user1;
+
+Revoke succeeded.
+
+
+Q53: Grant ALL PRIVILEGES on the employee table to a specific user- user2 .
+
+SQL> GRANT ALL PRIVILEGES ON empm35 TO user2;
+
+Grant succeeded.
+
+Q54: Revoke DELETE permissions for the employee table from the admin user.
+
+SQL> REVOKE DELETE ON empm35 FROM admin;
+
+Revoke succeeded.
+
